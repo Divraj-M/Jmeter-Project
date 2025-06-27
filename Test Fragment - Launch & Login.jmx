@@ -332,7 +332,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
           <stringProp name="ActionProcessor.duration">1000</stringProp>
         </TestAction>
         <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
+          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause">
             <stringProp name="ConstantTimer.delay">1000</stringProp>
             <stringProp name="RandomTimer.range">100</stringProp>
           </UniformRandomTimer>
@@ -424,18 +424,12 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
           <intProp name="ActionProcessor.action">1</intProp>
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/core/i18n/messages-29" enabled="true">
           <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
@@ -523,13 +517,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/dashboard/employees/time-at-work-32" enabled="true">
           <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
@@ -648,13 +636,7 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/dashboard/employees/action-summary-33" enabled="true">
           <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
@@ -738,13 +720,7 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/dashboard/shortcuts-34" enabled="true">
           <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
@@ -828,13 +804,7 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/dashboard/employees/leaves-35" enabled="true">
           <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
@@ -921,18 +891,12 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
           <intProp name="ActionProcessor.action">1</intProp>
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/dashboard/employees/subunit-36" enabled="true">
           <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
@@ -1016,13 +980,7 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/events/push-31" enabled="true">
           <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
@@ -1106,13 +1064,7 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/dashboard/employees/locations-37" enabled="true">
           <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
@@ -1196,13 +1148,7 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/buzz/feed-38" enabled="true">
           <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
@@ -1306,18 +1252,12 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
           <intProp name="ActionProcessor.action">1</intProp>
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
       </hashTree>
     </hashTree>
   </hashTree>

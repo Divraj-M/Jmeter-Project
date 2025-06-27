@@ -99,13 +99,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/auth/login-97" enabled="false">
           <stringProp name="TestPlan.comments">Detected a redirect from the previous sample</stringProp>
           <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
@@ -267,31 +261,19 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
           <boolProp name="displayJMeterProperties">false</boolProp>
           <boolProp name="displayJMeterVariables">true</boolProp>
           <boolProp name="displaySystemProperties">false</boolProp>
         </DebugSampler>
         <hashTree/>
-        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
           <intProp name="ActionProcessor.action">1</intProp>
           <intProp name="ActionProcessor.target">0</intProp>
           <stringProp name="ActionProcessor.duration">500</stringProp>
         </TestAction>
-        <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
-            <stringProp name="RandomTimer.range">100</stringProp>
-          </UniformRandomTimer>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
       </hashTree>
     </hashTree>
   </hashTree>
