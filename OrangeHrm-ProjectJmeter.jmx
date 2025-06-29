@@ -64,7 +64,7 @@ log.info(&quot;Thread parameters set: Threads=${props.get(&apos;ThreadCount&apos
         </collectionProp>
       </Arguments>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - PIM" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - PIM">
         <stringProp name="ThreadGroup.num_threads">${__P(ThreadCount)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RampUp)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -92,7 +92,7 @@ log.info(&quot;Thread parameters set: Threads=${props.get(&apos;ThreadCount&apos
           <boolProp name="CounterConfig.per_user">true</boolProp>
         </CounterConfig>
         <hashTree/>
-        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller - Launch &amp; Login" enabled="true"/>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller - Launch &amp; Login"/>
         <hashTree>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Controller - Launch and Login" enabled="true">
             <stringProp name="IncludeController.includepath">E:\Jmeter-Project\Test Fragment - Launch &amp; Login.jmx</stringProp>
@@ -120,6 +120,39 @@ log.info(&quot;Thread parameters set: Threads=${props.get(&apos;ThreadCount&apos
           <stringProp name="filename"></stringProp>
           <stringProp name="cacheKey">true</stringProp>
           <stringProp name="script">log.info(&quot;🔢 Current Counter Value: &quot; + vars.get(&quot;Counter&quot;))
+</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Thread End" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">long pacingTime = 60000  // 60 seconds
+
+// Get current iteration from property, or initialize to 1
+int currentLoop = props.get(&quot;Loop&quot;)?.toInteger() ?: 1
+int totalLoops = props.get(&quot;LoopCount&quot;)?.toInteger() ?: 1
+
+if (currentLoop &lt; totalLoops) {
+    long lastStart = props.get(&quot;lastIterationStart&quot;)?.toLong() ?: System.currentTimeMillis()
+    long now = System.currentTimeMillis()
+    long elapsed = now - lastStart
+    long waitTime = pacingTime - elapsed
+
+    if (waitTime &gt; 0) {
+        log.info(&quot;Pacing active - waiting &quot; + waitTime + &quot; ms&quot;)
+        Thread.sleep(waitTime)
+    } else {
+        log.info(&quot;Pacing skipped - iteration took longer than pacing time&quot;)
+    }
+
+    // Update start time and loop count
+    props.put(&quot;lastIterationStart&quot;, System.currentTimeMillis().toString())
+    props.put(&quot;Loop&quot;, (currentLoop + 1).toString())
+} else {
+    log.info(&quot;Last iteration detected - skipping pacing wait&quot;)
+}
 </stringProp>
         </JSR223Sampler>
         <hashTree/>
@@ -166,7 +199,7 @@ log.info(&quot;Thread parameters set: Threads=${props.get(&apos;ThreadCount&apos
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -240,81 +273,8 @@ log.info(&quot;Thread parameters set: Threads=${props.get(&apos;ThreadCount&apos
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer" enabled="false">
-          <boolProp name="ResultCollector.error_logging">false</boolProp>
-          <objProp>
-            <name>saveConfig</name>
-            <value class="SampleSaveConfiguration">
-              <time>true</time>
-              <latency>true</latency>
-              <timestamp>true</timestamp>
-              <success>true</success>
-              <label>true</label>
-              <code>true</code>
-              <message>true</message>
-              <threadName>true</threadName>
-              <dataType>true</dataType>
-              <encoding>true</encoding>
-              <assertions>true</assertions>
-              <subresults>true</subresults>
-              <responseData>true</responseData>
-              <samplerData>true</samplerData>
-              <xml>true</xml>
-              <fieldNames>true</fieldNames>
-              <responseHeaders>true</responseHeaders>
-              <requestHeaders>true</requestHeaders>
-              <responseDataOnError>false</responseDataOnError>
-              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-              <assertionsResultsToSave>0</assertionsResultsToSave>
-              <bytes>true</bytes>
-              <sentBytes>true</sentBytes>
-              <url>true</url>
-              <fileName>true</fileName>
-              <hostname>true</hostname>
-              <threadCounts>true</threadCounts>
-              <sampleCount>true</sampleCount>
-              <idleTime>true</idleTime>
-              <connectTime>true</connectTime>
-            </value>
-          </objProp>
-          <stringProp name="filename">E:\Jmeter-Project\Reports\full.jtl</stringProp>
-        </ResultCollector>
-        <hashTree/>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Thread End" enabled="true">
-          <stringProp name="scriptLanguage">groovy</stringProp>
-          <stringProp name="parameters"></stringProp>
-          <stringProp name="filename"></stringProp>
-          <stringProp name="cacheKey">true</stringProp>
-          <stringProp name="script">long pacingTime = 60000  // 60 seconds
-
-// Get current iteration from property, or initialize to 1
-int currentLoop = props.get(&quot;Loop&quot;)?.toInteger() ?: 1
-int totalLoops = props.get(&quot;LoopCount&quot;)?.toInteger() ?: 1
-
-if (currentLoop &lt; totalLoops) {
-    long lastStart = props.get(&quot;lastIterationStart&quot;)?.toLong() ?: System.currentTimeMillis()
-    long now = System.currentTimeMillis()
-    long elapsed = now - lastStart
-    long waitTime = pacingTime - elapsed
-
-    if (waitTime &gt; 0) {
-        log.info(&quot;Pacing active - waiting &quot; + waitTime + &quot; ms&quot;)
-        Thread.sleep(waitTime)
-    } else {
-        log.info(&quot;Pacing skipped - iteration took longer than pacing time&quot;)
-    }
-
-    // Update start time and loop count
-    props.put(&quot;lastIterationStart&quot;, System.currentTimeMillis().toString())
-    props.put(&quot;Loop&quot;, (currentLoop + 1).toString())
-} else {
-    log.info(&quot;Last iteration detected - skipping pacing wait&quot;)
-}
-</stringProp>
-        </JSR223Sampler>
-        <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - Admin">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - Admin" enabled="true">
         <stringProp name="ThreadGroup.num_threads">${__P(ThreadCount)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RampUp)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -552,7 +512,7 @@ if (currentLoop &lt; totalLoops) {
           <stringProp name="script">vars.put(&quot;iterationStart&quot;, System.currentTimeMillis().toString())</stringProp>
         </JSR223Sampler>
         <hashTree/>
-        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller - Launch &amp; Login"/>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller - Launch &amp; Login" enabled="true"/>
         <hashTree>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Controller - Launch and Login" enabled="true">
             <stringProp name="IncludeController.includepath">E:\Jmeter-Project\Test Fragment - Launch &amp; Login.jmx</stringProp>
@@ -563,7 +523,7 @@ if (currentLoop &lt; totalLoops) {
           <stringProp name="IncludeController.includepath">E:\Jmeter-Project\Test Fragment - Admin.jmx</stringProp>
         </IncludeController>
         <hashTree/>
-        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Module Controller - Create Customer">
+        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Module Controller - Create Customer" enabled="true">
           <collectionProp name="ModuleController.node_path">
             <stringProp name="764597751">Test Plan</stringProp>
             <stringProp name="53285529">Test Plan - OrangeHRM</stringProp>
@@ -572,7 +532,7 @@ if (currentLoop &lt; totalLoops) {
           </collectionProp>
         </ModuleController>
         <hashTree/>
-        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Module Controller - Create Project - ADD Time Sheet">
+        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="Module Controller - Create Project - ADD Time Sheet" enabled="true">
           <collectionProp name="ModuleController.node_path">
             <stringProp name="764597751">Test Plan</stringProp>
             <stringProp name="53285529">Test Plan - OrangeHRM</stringProp>
@@ -592,7 +552,40 @@ if (currentLoop &lt; totalLoops) {
           </IncludeController>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Thread End">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">long pacingTime = 180000  // 60 seconds
+
+// Get current iteration from property, or initialize to 1
+int currentLoop = props.get(&quot;Loop&quot;)?.toInteger() ?: 1
+int totalLoops = props.get(&quot;LoopCount&quot;)?.toInteger() ?: 1
+
+if (currentLoop &lt; totalLoops) {
+    long lastStart = props.get(&quot;lastIterationStart&quot;)?.toLong() ?: System.currentTimeMillis()
+    long now = System.currentTimeMillis()
+    long elapsed = now - lastStart
+    long waitTime = pacingTime - elapsed
+
+    if (waitTime &gt; 0) {
+        log.info(&quot;Pacing active - waiting &quot; + waitTime + &quot; ms&quot;)
+        Thread.sleep(waitTime)
+    } else {
+        log.info(&quot;Pacing skipped - iteration took longer than pacing time&quot;)
+    }
+
+    // Update start time and loop count
+    props.put(&quot;lastIterationStart&quot;, System.currentTimeMillis().toString())
+    props.put(&quot;Loop&quot;, (currentLoop + 1).toString())
+} else {
+    log.info(&quot;Last iteration detected - skipping pacing wait&quot;)
+}
+</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -666,7 +659,7 @@ if (currentLoop &lt; totalLoops) {
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report">
+        <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -703,41 +696,61 @@ if (currentLoop &lt; totalLoops) {
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Thread End" enabled="true">
-          <stringProp name="scriptLanguage">groovy</stringProp>
-          <stringProp name="parameters"></stringProp>
-          <stringProp name="filename"></stringProp>
-          <stringProp name="cacheKey">true</stringProp>
-          <stringProp name="script">long pacingTime = 60000  // 60 seconds
-
-// Get current iteration from property, or initialize to 1
-int currentLoop = props.get(&quot;Loop&quot;)?.toInteger() ?: 1
-int totalLoops = props.get(&quot;LoopCount&quot;)?.toInteger() ?: 1
-
-if (currentLoop &lt; totalLoops) {
-    long lastStart = props.get(&quot;lastIterationStart&quot;)?.toLong() ?: System.currentTimeMillis()
-    long now = System.currentTimeMillis()
-    long elapsed = now - lastStart
-    long waitTime = pacingTime - elapsed
-
-    if (waitTime &gt; 0) {
-        log.info(&quot;Pacing active - waiting &quot; + waitTime + &quot; ms&quot;)
-        Thread.sleep(waitTime)
-    } else {
-        log.info(&quot;Pacing skipped - iteration took longer than pacing time&quot;)
-    }
-
-    // Update start time and loop count
-    props.put(&quot;lastIterationStart&quot;, System.currentTimeMillis().toString())
-    props.put(&quot;Loop&quot;, (currentLoop + 1).toString())
-} else {
-    log.info(&quot;Last iteration detected - skipping pacing wait&quot;)
-}
-</stringProp>
-        </JSR223Sampler>
-        <hashTree/>
       </hashTree>
-      <ProxyControl guiclass="ProxyControlGui" testclass="ProxyControl" testname="HTTP(S) Test Script Recorder" enabled="true">
+      <BackendListener guiclass="BackendListenerGui" testclass="BackendListener" testname="Backend Listener">
+        <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="influxdbMetricsSender" elementType="Argument">
+              <stringProp name="Argument.name">influxdbMetricsSender</stringProp>
+              <stringProp name="Argument.value">org.apache.jmeter.visualizers.backend.influxdb.HttpMetricsSender</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="influxdbUrl" elementType="Argument">
+              <stringProp name="Argument.name">influxdbUrl</stringProp>
+              <stringProp name="Argument.value">http://localhost:8086/write?db=jmeter</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="application" elementType="Argument">
+              <stringProp name="Argument.name">application</stringProp>
+              <stringProp name="Argument.value">OrangeHRM</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="measurement" elementType="Argument">
+              <stringProp name="Argument.name">measurement</stringProp>
+              <stringProp name="Argument.value">jmeter</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="summaryOnly" elementType="Argument">
+              <stringProp name="Argument.name">summaryOnly</stringProp>
+              <stringProp name="Argument.value">false</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="samplersRegex" elementType="Argument">
+              <stringProp name="Argument.name">samplersRegex</stringProp>
+              <stringProp name="Argument.value">.*</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="percentiles" elementType="Argument">
+              <stringProp name="Argument.name">percentiles</stringProp>
+              <stringProp name="Argument.value">90;95;99</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="testTitle" elementType="Argument">
+              <stringProp name="Argument.name">testTitle</stringProp>
+              <stringProp name="Argument.value">OrangeHRM</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="eventTags" elementType="Argument">
+              <stringProp name="Argument.name">eventTags</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </elementProp>
+        <stringProp name="classname">org.apache.jmeter.visualizers.backend.influxdb.InfluxdbBackendListenerClient</stringProp>
+      </BackendListener>
+      <hashTree/>
+      <ProxyControl guiclass="ProxyControlGui" testclass="ProxyControl" testname="HTTP(S) Test Script Recorder">
         <stringProp name="ProxyControlGui.port">8888</stringProp>
         <collectionProp name="ProxyControlGui.exclude_list"/>
         <collectionProp name="ProxyControlGui.include_list"/>
@@ -928,7 +941,7 @@ if (currentLoop &lt; totalLoops) {
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/auth/logout-95" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/auth/logout-95">
             <stringProp name="TestPlan.comments">Detected the start of a redirect chain</stringProp>
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
@@ -1188,7 +1201,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             <boolProp name="displaySystemProperties">false</boolProp>
           </DebugSampler>
           <hashTree/>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
@@ -1396,7 +1409,7 @@ Match[1][1]=e6f911e6c1362f.rRY7hQonMGHG1FloPhf-r5pSOD5eengR-HTfloWRBxc.5WRVtFsUA
           </AuthManager>
           <hashTree/>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Login">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Login" enabled="true">
           <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
@@ -1527,7 +1540,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             <stringProp name="ActionProcessor.duration">1000</stringProp>
           </TestAction>
           <hashTree>
-            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause">
+            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
               <stringProp name="ConstantTimer.delay">1000</stringProp>
               <stringProp name="RandomTimer.range">100</stringProp>
             </UniformRandomTimer>
@@ -1619,7 +1632,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
@@ -2086,7 +2099,7 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
@@ -2447,7 +2460,7 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
@@ -2462,7 +2475,7 @@ vars.put(&quot;time&quot;, new SimpleDateFormat(&quot;HH:mm&quot;).format(now))
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/pim/viewPimModule-51" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/pim/viewPimModule-51">
             <stringProp name="TestPlan.comments">Detected the start of a redirect chain</stringProp>
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
@@ -2548,13 +2561,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </JSR223Assertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">1000</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/pim/viewEmployeeList-53" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/pim/viewEmployeeList-53">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -2636,13 +2649,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/core/i18n/messages-55" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/core/i18n/messages-55">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -2724,13 +2737,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/pim/viewPhoto/empNumber/7-56" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/pim/viewPhoto/empNumber/7-56">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -2804,13 +2817,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/admin/employment-statuses-58" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/admin/employment-statuses-58">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -2896,13 +2909,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/admin/subunits-60" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/admin/subunits-60">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -2980,13 +2993,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/pim/employees-57" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/pim/employees-57">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -3107,13 +3120,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/admin/job-titles-59" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/admin/job-titles-59">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -3199,13 +3212,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/pim/addEmployee-62" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/pim/addEmployee-62">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -3287,13 +3300,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/core/i18n/messages-63" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/core/i18n/messages-63">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -3455,13 +3468,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/pim/employees-65" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/pim/employees-65">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -3539,13 +3552,13 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/core/validation/unique-67" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/core/validation/unique-67">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -3642,7 +3655,7 @@ log.info(&quot;The EmpID is &quot;+empId);
 </stringProp>
             </JSR223PreProcessor>
             <hashTree/>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="49586">200</stringProp>
               </collectionProp>
@@ -3652,14 +3665,23 @@ log.info(&quot;The EmpID is &quot;+empId);
               <intProp name="Assertion.test_type">2</intProp>
             </ResponseAssertion>
             <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion">
+              <stringProp name="JSON_PATH">$.data.valid</stringProp>
+              <stringProp name="EXPECTED_VALUE">true</stringProp>
+              <boolProp name="JSONVALIDATION">false</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/core/validation/unique-68" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/core/validation/unique-68">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -3758,6 +3780,15 @@ log.info(&quot;The EmpID is &quot;+empId);
               <boolProp name="Assertion.assume_success">false</boolProp>
               <intProp name="Assertion.test_type">2</intProp>
             </ResponseAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="true">
+              <stringProp name="JSON_PATH">$.data.valid</stringProp>
+              <stringProp name="EXPECTED_VALUE">true</stringProp>
+              <boolProp name="JSONVALIDATION">false</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
             <hashTree/>
           </hashTree>
           <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
@@ -4852,7 +4883,7 @@ log.info(&quot;Full Name: &quot; + fullName)
             <stringProp name="ActionProcessor.duration">200</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/leave/holidays-83" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/leave/holidays-83">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -5774,7 +5805,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
@@ -7438,7 +7469,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             <stringProp name="ActionProcessor.duration">200</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/leave/holidays-178">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/leave/holidays-178" enabled="true">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -10097,7 +10128,7 @@ log.info(&quot;Full Name: &quot; + fullName)
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
@@ -11239,7 +11270,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </JSR223Assertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
@@ -13569,7 +13600,7 @@ log.info(&quot;Generated Username: &quot; + username)
             <stringProp name="ActionProcessor.duration">1000</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/admin/users-78">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v2/admin/users-78" enabled="true">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -14028,7 +14059,7 @@ log.info(&quot;Generated Username: &quot; + username)
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">500</stringProp>
@@ -19594,7 +19625,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">0</stringProp>
@@ -19872,7 +19903,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">0</stringProp>
@@ -21349,7 +21380,7 @@ log.info(&quot;🍽️ Extracted Food ID: ${foodId}&quot;)
             <stringProp name="ActionProcessor.duration">200</stringProp>
           </TestAction>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v${Loop}/time/employees/timesheets/${Loop}71/entries-418" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/web/index.php/api/v${Loop}/time/employees/timesheets/${Loop}71/entries-418" enabled="false">
             <stringProp name="HTTPSampler.domain">opensource-demo.orangehrmlive.com</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -23973,7 +24004,7 @@ log.info(&quot;🍽️ Extracted Food ID: ${foodId}&quot;)
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
             <intProp name="ActionProcessor.action">1</intProp>
             <intProp name="ActionProcessor.target">0</intProp>
             <stringProp name="ActionProcessor.duration">200</stringProp>
