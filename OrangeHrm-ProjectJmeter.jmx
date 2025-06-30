@@ -64,7 +64,7 @@ log.info(&quot;Thread parameters set: Threads=${props.get(&apos;ThreadCount&apos
         </collectionProp>
       </Arguments>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - PIM" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - PIM" enabled="false">
         <stringProp name="ThreadGroup.num_threads">${__P(ThreadCount)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RampUp)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -274,7 +274,7 @@ if (currentLoop &lt; totalLoops) {
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - Admin">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - Admin" enabled="false">
         <stringProp name="ThreadGroup.num_threads">${__P(ThreadCount)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RampUp)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -16434,7 +16434,7 @@ if (!(code == &quot;200&quot; || code == &quot;302&quot;)) {
           <hashTree/>
         </hashTree>
       </hashTree>
-      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="Test Fragment - Time Sheet" enabled="false"/>
+      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="Test Fragment" enabled="false"/>
       <hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Create Project -Time Sheet">
           <boolProp name="TransactionController.parent">true</boolProp>
