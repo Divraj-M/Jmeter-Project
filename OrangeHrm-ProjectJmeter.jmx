@@ -64,7 +64,7 @@ log.info(&quot;Thread parameters set: Threads=${props.get(&apos;ThreadCount&apos
         </collectionProp>
       </Arguments>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - PIM" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - PIM" enabled="true">
         <stringProp name="ThreadGroup.num_threads">${__P(ThreadCount)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RampUp)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -274,7 +274,7 @@ if (currentLoop &lt; totalLoops) {
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - Admin" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - Admin">
         <stringProp name="ThreadGroup.num_threads">${__P(ThreadCount)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RampUp)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -692,7 +692,7 @@ if (currentLoop &lt; totalLoops) {
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <BackendListener guiclass="BackendListenerGui" testclass="BackendListener" testname="Backend Listener" enabled="true">
+      <BackendListener guiclass="BackendListenerGui" testclass="BackendListener" testname="Backend Listener" enabled="false">
         <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments">
           <collectionProp name="Arguments.arguments">
             <elementProp name="influxdbMetricsSender" elementType="Argument">
@@ -23358,7 +23358,7 @@ log.info(&quot;Generated Week (${weekType}): $etcRange&quot;)
                 <elementProp name="date" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.name">date</stringProp>
-                  <stringProp name="Argument.value">2025-06-${todayDay}</stringProp>
+                  <stringProp name="Argument.value">2025-${todayMonth}-${todayDay}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
